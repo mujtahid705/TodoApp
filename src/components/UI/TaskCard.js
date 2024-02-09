@@ -19,7 +19,7 @@ import {
   Select,
 } from "@mui/material";
 
-const TaskCard = ({ id, titleProp, descriptionProp, priorityProp }) => {
+const TaskCard = ({ idProp, titleProp, descriptionProp, priorityProp }) => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -27,6 +27,8 @@ const TaskCard = ({ id, titleProp, descriptionProp, priorityProp }) => {
   const [priority, setPriority] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+
+  const taskData = useSelector((state) => state.homepage.tasks);
 
   let priorityClass;
   switch (priorityProp) {
@@ -54,6 +56,31 @@ const TaskCard = ({ id, titleProp, descriptionProp, priorityProp }) => {
     dispatch(homepageActions.deleteTask(id));
   };
 
+  const updateHandler = () => {
+    const data = {
+      id: idProp,
+      title,
+      description,
+      priority,
+    };
+
+    let newData = [];
+    taskData.map((task) => {
+      if (task.id === idProp) {
+        newData.push(data);
+      } else {
+        newData.push(task);
+      }
+    });
+
+    dispatch(homepageActions.setTasks(newData));
+    dispatch(homepageActions.increaseID());
+    setPriority("");
+    setTitle("");
+    setDescription("");
+    setEdit(false);
+  };
+
   return (
     <>
       <motion.div
@@ -78,14 +105,14 @@ const TaskCard = ({ id, titleProp, descriptionProp, priorityProp }) => {
             <Button
               className={styles.editBtn}
               variant="contained"
-              onClick={() => editHandler(id)}
+              onClick={() => editHandler(idProp)}
             >
               Edit
             </Button>
             <Button
               className={styles.editBtn}
               variant="contained"
-              onClick={() => deleteHandler(id)}
+              onClick={() => deleteHandler(idProp)}
             >
               Delete
             </Button>
@@ -105,12 +132,12 @@ const TaskCard = ({ id, titleProp, descriptionProp, priorityProp }) => {
           <div>
             <input
               type="text"
-              placeholder="Title"
+              placeholder={editData.title}
               onChange={(e) => setTitle(e.target.value)}
             />
             <input
               type="text"
-              placeholder="description"
+              placeholder={editData.description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
@@ -121,7 +148,7 @@ const TaskCard = ({ id, titleProp, descriptionProp, priorityProp }) => {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={priority}
-              label="Age"
+              label="Edit"
               onChange={(e) => setPriority(e.target.value)}
             >
               <MenuItem value={"High"}>High</MenuItem>
@@ -130,7 +157,9 @@ const TaskCard = ({ id, titleProp, descriptionProp, priorityProp }) => {
             </Select>
           </FormControl>
 
-          <p className={styles.submitBtn}>Update</p>
+          <p className={styles.updateBtn} onClick={updateHandler}>
+            Update
+          </p>
         </Box>
       </Modal>
     </>

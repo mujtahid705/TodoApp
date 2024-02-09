@@ -53,7 +53,7 @@ const Body = () => {
         {taskData.map((task) => (
           <TaskCard
             key={task.id}
-            id={task.id}
+            idProp={task.id}
             titleProp={task.title}
             descriptionProp={task.description}
             priorityProp={task.priority}
@@ -89,7 +89,7 @@ const Body = () => {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={priority}
-              label="Age"
+              label="Add"
               onChange={(e) => setPriority(e.target.value)}
             >
               <MenuItem value={"High"}>High</MenuItem>
