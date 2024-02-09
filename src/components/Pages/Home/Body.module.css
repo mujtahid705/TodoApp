@@ -1,0 +1,11 @@
+.addBtnCon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.addBtn {
+  font-size: 50px;
+  color: var(--primary-dark);
+  cursor: pointer;
+}

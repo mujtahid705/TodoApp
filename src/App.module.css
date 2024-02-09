@@ -1,5 +1,7 @@
 .app {
-  margin: 0 30px;
+  width: 90%;
+  max-width: 1200px;
+  margin: 30px auto;
 }
 
 .appName {

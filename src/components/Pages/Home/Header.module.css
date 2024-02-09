@@ -8,6 +8,8 @@
   background-color: var(--grey-dark);
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  border-top: 4px solid #454545;
   --mask: radial-gradient(
         44.72px at 50% calc(100% - 60px),
         #000 99%,
@@ -20,6 +22,20 @@
   mask: var(--mask);
 }
 
+.sec1 {
+}
+
 .sec2 {
   display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.date {
+  color: var(--primary-color);
+  margin: 5px 0;
+}
+
+.name {
+  color: #454545;
 }
