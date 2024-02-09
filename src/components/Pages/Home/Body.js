@@ -1,6 +1,7 @@
 import { useState } from "react";
 import TaskCard from "../../UI/TaskCard";
 import styles from "./Body.module.css";
+import { style } from "../../../modal-style";
 
 // 3rd Party Components
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -10,39 +11,38 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { useDispatch, useSelector } from "react-redux";
+import { homepageActions } from "../../../redux/homepage-slice";
 
 const Body = () => {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [priority, setPriority] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
+  const taskData = useSelector((state) => state.homepage.tasks);
+  const id = useSelector((state) => state.homepage.id);
+
   const submitHandler = () => {
     const data = {
+      id,
       title,
       description,
       priority,
     };
 
-    console.log(data);
+    const newData = [...taskData, data];
+    console.log(newData);
+
+    dispatch(homepageActions.setTasks(newData));
+    dispatch(homepageActions.increaseID());
     setPriority("");
     setTitle("");
     setDescription("");
     setOpen(false);
   };
 
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #4d4d4d",
-    boxShadow: 24,
-    borderRadius: 2,
-    p: 4,
-  };
   return (
     <>
       <div className={styles.addBtnCon} onClick={() => setOpen(true)}>
@@ -50,11 +50,18 @@ const Body = () => {
       </div>
 
       <div className={styles.tasks}>
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
+        {taskData.map((task) => (
+          <TaskCard
+            key={task.id}
+            id={task.id}
+            titleProp={task.title}
+            descriptionProp={task.description}
+            priorityProp={task.priority}
+          />
+        ))}
       </div>
 
+      {/* Add Task Modal */}
       <Modal
         open={open}
         onClose={() => setOpen(false)}

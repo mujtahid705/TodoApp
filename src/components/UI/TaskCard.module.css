@@ -4,10 +4,23 @@
   padding: 10px 20px;
   border-radius: 10px;
   max-width: 800px;
+  min-width: 500px;
 
   box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.26);
   -webkit-box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.26);
   -moz-box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.26);
+}
+
+.highPriority {
+  background-color: red;
+}
+
+.mediumPriority {
+  background-color: yellow;
+}
+
+.lowPriority {
+  background-color: green;
 }
 
 .s1 {
