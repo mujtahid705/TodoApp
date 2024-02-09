@@ -1,0 +1,10 @@
+.app {
+  margin: 0 30px;
+}
+
+.appName {
+  font-size: 28px;
+  font-weight: 200;
+  font-style: italic;
+  margin: 10px 0;
+}

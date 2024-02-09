@@ -1,0 +1,22 @@
+.welcomeTxt {
+  font-size: 40px;
+}
+
+.container {
+  background-color: #f0f0f0;
+  /* background-color: #eaeaea; */
+  --mask: radial-gradient(
+        44.72px at 50% calc(100% - 60px),
+        #000 99%,
+        #0000 101%
+      )
+      calc(50% - 40px) 0/80px 100%,
+    radial-gradient(44.72px at 50% calc(100% + 40px), #0000 99%, #000 101%) 50%
+      calc(100% - 20px) / 80px 100% repeat-x;
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
+}
+
+.sec1 {
+  margin-bottom: 200px 0;
+}
