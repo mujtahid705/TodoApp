@@ -22,9 +22,6 @@
   mask: var(--mask);
 }
 
-.sec1 {
-}
-
 .sec2 {
   display: flex;
   gap: 16px;
