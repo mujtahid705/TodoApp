@@ -3,8 +3,11 @@
 }
 
 .container {
-  background-color: #f0f0f0;
-  /* background-color: #eaeaea; */
+  height: fit-content;
+  padding: 10px 20px 50px 20px;
+  background-color: var(--grey-dark);
+  display: flex;
+  justify-content: space-between;
   --mask: radial-gradient(
         44.72px at 50% calc(100% - 60px),
         #000 99%,
@@ -17,6 +20,6 @@
   mask: var(--mask);
 }
 
-.sec1 {
-  margin-bottom: 200px 0;
+.sec2 {
+  display: flex;
 }

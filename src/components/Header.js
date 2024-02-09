@@ -1,4 +1,5 @@
 import styles from "./Header.module.css";
+import Card from "./UI/Card";
 
 const Header = () => {
   const currentDate = new Date();
@@ -10,7 +11,10 @@ const Header = () => {
           <p className={styles.welcomeTxt}>Hey Mujtahid!</p>
           <p>{formattedDate}</p>
         </div>
-        <p>ANother con</p>
+        <div className={styles.sec2}>
+          <Card name="Total Tasks" num={5} />
+          <Card name="Completed Tasks" num={2} />
+        </div>
       </div>
     </>
   );
