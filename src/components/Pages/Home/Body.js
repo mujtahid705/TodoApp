@@ -57,7 +57,22 @@ const Body = () => {
   }, [filter, taskData]);
 
   // Sort Implementation
-  useEffect(() => {}, [sort, taskData]);
+  useEffect(() => {
+    if (sort === "") {
+      setTaskDisplay(taskData);
+    } else if (sort === "name") {
+      const temp = [...taskData];
+      temp.sort((a, b) => a.title.localeCompare(b.title));
+      setTaskDisplay(temp);
+    } else if (sort === "priority") {
+      const priorityOrder = { High: 1, Medium: 2, Low: 3 };
+      const temp = [...taskData];
+      temp.sort(
+        (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
+      );
+      setTaskDisplay(temp);
+    }
+  }, [sort, taskData]);
 
   return (
     <>
