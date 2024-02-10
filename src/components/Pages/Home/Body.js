@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import TaskCard from "../../UI/TaskCard";
 import styles from "./Body.module.css";
 import { style } from "../../../modal-style";
+import { homepageActions } from "../../../redux/homepage-slice";
 
 // 3rd Party Components
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -11,39 +12,51 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useDispatch, useSelector } from "react-redux";
-import { homepageActions } from "../../../redux/homepage-slice";
+import dayjs from "dayjs";
 
 const Body = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [sort, setSort] = useState("");
   const [filter, setFilter] = useState("");
+  const [textError, setTextError] = useState(false);
   const [taskDisplay, setTaskDisplay] = useState([]);
 
-  const [priority, setPriority] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState(null);
+  const [title, setTitle] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [date, setDate] = useState(dayjs(new Date()));
 
   const taskData = useSelector((state) => state.homepage.tasks);
   const id = useSelector((state) => state.homepage.id);
 
   const submitHandler = () => {
-    const data = {
-      id,
-      title,
-      description,
-      priority,
-    };
+    if (id && title && description && priority && date) {
+      const data = {
+        id,
+        title,
+        description,
+        priority,
+        date: date.format("YYYY-MM-DD"),
+      };
 
-    const newData = [...taskData, data];
+      const newData = [...taskData, data];
 
-    dispatch(homepageActions.setTasks(newData));
-    dispatch(homepageActions.increaseID());
-    setPriority("");
-    setTitle("");
-    setDescription("");
-    setOpen(false);
+      dispatch(homepageActions.setTasks(newData));
+      dispatch(homepageActions.increaseID());
+      setPriority("");
+      setTitle("");
+      setDescription("");
+      setTextError(false);
+      setOpen(false);
+    } else {
+      setTextError(true);
+    }
   };
 
   // Filter Implementation
@@ -138,18 +151,36 @@ const Body = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <p>Add Task</p>
-          <div>
+          <p className={styles.addTitle}>Add Task</p>
+          {textError && (
+            <p className={styles.errorTxt}>Please complete the form!</p>
+          )}
+          <div className={styles.inputCon}>
             <input
               type="text"
               placeholder="Title"
+              className={styles.input}
               onChange={(e) => setTitle(e.target.value)}
             />
             <input
               type="text"
               placeholder="description"
+              className={styles.input}
               onChange={(e) => setDescription(e.target.value)}
             />
+          </div>
+
+          <div className={styles.dateCon}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  className={styles.datePicker}
+                  label="Date"
+                  value={date}
+                  onChange={(value) => setDate(value)}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
           </div>
 
           <FormControl fullWidth>
@@ -158,6 +189,7 @@ const Body = () => {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={priority}
+              className={styles.priority}
               label="Add"
               onChange={(e) => setPriority(e.target.value)}
             >

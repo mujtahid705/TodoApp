@@ -27,9 +27,45 @@
 }
 
 .submitBtn {
-  border: 2px solid black;
+  border: 2px solid var(--secondary-color);
   padding: 5px 10px;
   cursor: pointer;
   width: fit-content;
+  margin-top: 10px;
+  transition: 0.3s ease;
+}
+
+.submitBtn:hover {
+  background-color: var(--secondary-color);
+  color: var(--white-grey);
+}
+
+.inputCon {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.input {
+  height: 35px;
+  padding: 5px 10px;
+  font-size: 18px;
+}
+
+.dateCon {
+  margin: 10px 0;
+}
+
+.datePicker {
+  width: 100%;
+}
+
+.addTitle {
+  font-size: 25px;
+}
+
+.errorTxt {
+  color: var(--danger-color);
   margin-top: 10px;
 }
