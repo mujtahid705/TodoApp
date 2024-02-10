@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  userName: "Mujtahid",
   tasks: [],
   id: 0,
+  completedTask: 0,
 };
 
 export const homepageSlice = createSlice({
