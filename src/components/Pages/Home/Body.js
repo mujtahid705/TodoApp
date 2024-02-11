@@ -36,22 +36,25 @@ const Body = () => {
   const id = useSelector((state) => state.homepage.id);
 
   const submitHandler = () => {
-    if (id && title && description && priority && date) {
+    if (title && description && priority && date) {
       const data = {
         id,
         title,
         description,
         priority,
-        date: date.format("YYYY-MM-DD"),
+        date: date.format("DD-MM-YYYY"),
+        status: false,
       };
+      console.log(data);
 
       const newData = [...taskData, data];
 
       dispatch(homepageActions.setTasks(newData));
       dispatch(homepageActions.increaseID());
-      setPriority("");
-      setTitle("");
-      setDescription("");
+      setPriority(null);
+      setTitle(null);
+      setDescription(null);
+      setDate(dayjs(new Date()));
       setTextError(false);
       setOpen(false);
     } else {
@@ -139,6 +142,7 @@ const Body = () => {
             titleProp={task.title}
             descriptionProp={task.description}
             priorityProp={task.priority}
+            dateProp={task.date}
           />
         ))}
       </div>
@@ -178,6 +182,7 @@ const Body = () => {
                   label="Date"
                   value={date}
                   onChange={(value) => setDate(value)}
+                  format="DD-MM-YYYY"
                 />
               </DemoContainer>
             </LocalizationProvider>

@@ -5,9 +5,8 @@ import { style } from "../../modal-style";
 
 // 3rd party packages
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Switch from "@mui/material/Switch";
+import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
-import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { homepageActions } from "../../redux/homepage-slice";
 import {
@@ -18,15 +17,27 @@ import {
   Modal,
   Select,
 } from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import dayjs from "dayjs";
 
-const TaskCard = ({ idProp, titleProp, descriptionProp, priorityProp }) => {
+const TaskCard = ({
+  idProp,
+  titleProp,
+  descriptionProp,
+  priorityProp,
+  dateProp,
+}) => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editData, setEditData] = useState([]);
   const [priority, setPriority] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [completed, setCompleted] = useState(false);
+  const [date, setDate] = useState(dayjs(new Date()));
 
   const taskData = useSelector((state) => state.homepage.tasks);
 
@@ -59,9 +70,10 @@ const TaskCard = ({ idProp, titleProp, descriptionProp, priorityProp }) => {
   const updateHandler = () => {
     const data = {
       id: idProp,
-      title,
-      description,
+      title: title ? title : titleProp,
+      description: description ? description : descriptionProp,
       priority,
+      date: date.format("DD-MM-YYYY"),
     };
 
     let newData = [];
@@ -81,27 +93,60 @@ const TaskCard = ({ idProp, titleProp, descriptionProp, priorityProp }) => {
     setEdit(false);
   };
 
+  const updateStatus = () => {
+    const data = {
+      id: idProp,
+      title: titleProp,
+      description: descriptionProp,
+      priority: priorityProp,
+      status: !completed,
+      date: dateProp,
+    };
+
+    let newData = [];
+    taskData.map((task) => {
+      if (task.id === idProp) {
+        newData.push(data);
+      } else {
+        newData.push(task);
+      }
+    });
+
+    if (completed) {
+      setCompleted(!completed);
+      dispatch(homepageActions.setTasks(newData));
+      dispatch(homepageActions.decreaseCompletedTask());
+    } else {
+      setCompleted(!completed);
+      dispatch(homepageActions.setTasks(newData));
+      dispatch(homepageActions.increaseCompletedTask());
+    }
+  };
+
   return (
     <>
-      <motion.div
-        transition={{ duration: 0.5 }}
-        className={`${styles.container} ${priorityClass}`}
-      >
-        <motion.div layout="position" className={styles.s1}>
+      <div className={`${styles.container} ${priorityClass}`}>
+        <div className={styles.s1}>
           <p className={styles.title}>{titleProp}</p>
           <div className={styles.btns}>
-            <Switch defaultChecked color="success" />
+            <Checkbox
+              checked={completed}
+              onChange={updateStatus}
+              inputProps={{ "aria-label": "controlled" }}
+              color="success"
+            />
             <MoreVertIcon
               className={styles.moreIcon}
               onClick={() => setIsOpen(!isOpen)}
             />
           </div>
-        </motion.div>
+        </div>
 
         {isOpen && (
-          <motion.div layout="position">
+          <div>
             <p className={styles.des}>{descriptionProp}</p>
-            <p>Priority: {priorityProp}</p>
+            <p className={styles.date}>Date: {dateProp}</p>
+            <p className={styles.priority}>Priority: {priorityProp}</p>
             <Button
               className={styles.editBtn}
               variant="contained"
@@ -116,9 +161,9 @@ const TaskCard = ({ idProp, titleProp, descriptionProp, priorityProp }) => {
             >
               Delete
             </Button>
-          </motion.div>
+          </div>
         )}
-      </motion.div>
+      </div>
 
       {/* Edit Task Modal */}
       <Modal
@@ -128,18 +173,34 @@ const TaskCard = ({ idProp, titleProp, descriptionProp, priorityProp }) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <p>Edit Task</p>
-          <div>
+          <p className={styles.addTitle}>Edit Task</p>
+          <div className={styles.inputCon}>
             <input
               type="text"
-              placeholder={editData.title}
+              className={styles.input}
+              value={editData.title}
               onChange={(e) => setTitle(e.target.value)}
             />
             <input
               type="text"
-              placeholder={editData.description}
+              className={styles.input}
+              value={editData.description}
               onChange={(e) => setDescription(e.target.value)}
             />
+          </div>
+
+          <div className={styles.dateCon}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  className={styles.datePicker}
+                  label="Date"
+                  value={date}
+                  onChange={(value) => setDate(value)}
+                  format="DD-MM-YYYY"
+                />
+              </DemoContainer>
+            </LocalizationProvider>
           </div>
 
           <FormControl fullWidth>
@@ -148,6 +209,7 @@ const TaskCard = ({ idProp, titleProp, descriptionProp, priorityProp }) => {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={priority}
+              className={styles.priority}
               label="Edit"
               onChange={(e) => setPriority(e.target.value)}
             >

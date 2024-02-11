@@ -20,16 +20,18 @@ export const homepageSlice = createSlice({
     },
 
     deleteTask: (state, payload) => {
-      //   state.tasks = state.tasks.filter(
-      //     (task) => task.id !== parseInt(payload.payload)
-      //   );
-      console.log(payload.payload);
-      const temp = state.tasks.filter((task) => {
-        console.log(task.id, "VS", payload.payload);
-        return task.id !== parseInt(payload.payload);
-      });
-      console.log(temp);
+      const temp = state.tasks.filter(
+        (task) => task.id !== parseInt(payload.payload)
+      );
       state.tasks = temp;
+    },
+
+    increaseCompletedTask: (state) => {
+      state.completedTask += 1;
+    },
+
+    decreaseCompletedTask: (state) => {
+      state.completedTask -= 1;
     },
   },
 });
