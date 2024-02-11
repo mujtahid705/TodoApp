@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  userName: "Mujtahid",
   tasks: [],
   id: 0,
   completedTask: 0,
@@ -17,6 +16,7 @@ export const homepageSlice = createSlice({
 
     increaseID: (state) => {
       state.id += 1;
+      localStorage.setItem("todoDataID", JSON.stringify(state.id));
     },
 
     deleteTask: (state, payload) => {
@@ -24,14 +24,23 @@ export const homepageSlice = createSlice({
         (task) => task.id !== parseInt(payload.payload)
       );
       state.tasks = temp;
+      localStorage.setItem("todoData", JSON.stringify(temp));
     },
 
     increaseCompletedTask: (state) => {
       state.completedTask += 1;
+      localStorage.setItem(
+        "todoDataCompletedTask",
+        JSON.stringify(state.completedTask)
+      );
     },
 
     decreaseCompletedTask: (state) => {
       state.completedTask -= 1;
+      localStorage.setItem(
+        "todoDataCompletedTask",
+        JSON.stringify(state.completedTask)
+      );
     },
   },
 });

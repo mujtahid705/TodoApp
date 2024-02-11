@@ -18,6 +18,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
+import PrimaryDialog from "../../UI/PrimaryDialog";
 
 const Body = () => {
   const dispatch = useDispatch();
@@ -35,6 +36,8 @@ const Body = () => {
   const taskData = useSelector((state) => state.homepage.tasks);
   const id = useSelector((state) => state.homepage.id);
 
+  console.log(taskDisplay, "TASKDIS");
+
   const submitHandler = () => {
     if (title && description && priority && date) {
       const data = {
@@ -45,12 +48,14 @@ const Body = () => {
         date: date.format("DD-MM-YYYY"),
         status: false,
       };
-      console.log(data);
 
       const newData = [...taskData, data];
+      console.log(newData);
 
       dispatch(homepageActions.setTasks(newData));
       dispatch(homepageActions.increaseID());
+      const newDataJSON = JSON.stringify(newData);
+      localStorage.setItem("todoData", newDataJSON);
       setPriority(null);
       setTitle(null);
       setDescription(null);
@@ -147,17 +152,13 @@ const Body = () => {
             descriptionProp={task.description}
             priorityProp={task.priority}
             dateProp={task.date}
+            statusProp={task.status}
           />
         ))}
       </div>
 
       {/* Add Task Modal */}
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <PrimaryDialog open={open} setOpen={setOpen}>
         <Box sx={style}>
           <p className={styles.addTitle}>Add Task</p>
           {textError && (
@@ -212,7 +213,7 @@ const Body = () => {
             Submit
           </p>
         </Box>
-      </Modal>
+      </PrimaryDialog>
     </>
   );
 };

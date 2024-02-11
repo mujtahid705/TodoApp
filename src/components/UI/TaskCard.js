@@ -21,6 +21,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import dayjs from "dayjs";
+import PrimaryDialog from "./PrimaryDialog";
 
 const TaskCard = ({
   idProp,
@@ -28,18 +29,20 @@ const TaskCard = ({
   descriptionProp,
   priorityProp,
   dateProp,
+  statusProp,
 }) => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editData, setEditData] = useState([]);
   const [priority, setPriority] = useState("");
-  const [title, setTitle] = useState(null);
-  const [description, setDescription] = useState(null);
-  const [completed, setCompleted] = useState(false);
+  const [completed, setCompleted] = useState(statusProp);
   const [date, setDate] = useState(dayjs(new Date()));
+  const [textError, setTextError] = useState(false);
 
   const taskData = useSelector((state) => state.homepage.tasks);
+
+  console.log(statusProp, "Status");
 
   let priorityClass;
   switch (priorityProp) {
@@ -68,29 +71,33 @@ const TaskCard = ({
   };
 
   const updateHandler = () => {
-    const data = {
-      id: idProp,
-      title: title ? title : titleProp,
-      description: description ? description : descriptionProp,
-      priority,
-      date: date.format("DD-MM-YYYY"),
-    };
+    if (priority && date) {
+      const data = {
+        id: idProp,
+        title: editData.title,
+        description: editData.description,
+        priority,
+        date: date.format("DD-MM-YYYY"),
+      };
 
-    let newData = [];
-    taskData.map((task) => {
-      if (task.id === idProp) {
-        newData.push(data);
-      } else {
-        newData.push(task);
-      }
-    });
+      let newData = [];
+      taskData.map((task) => {
+        if (task.id === idProp) {
+          newData.push(data);
+        } else {
+          newData.push(task);
+        }
+      });
 
-    dispatch(homepageActions.setTasks(newData));
-    dispatch(homepageActions.increaseID());
-    setPriority("");
-    setTitle("");
-    setDescription("");
-    setEdit(false);
+      dispatch(homepageActions.setTasks(newData));
+      dispatch(homepageActions.increaseID());
+      localStorage.setItem("todoData", JSON.stringify(newData));
+      setPriority(null);
+      setEdit(false);
+      setTextError(false);
+    } else {
+      setTextError(true);
+    }
   };
 
   const updateStatus = () => {
@@ -115,10 +122,12 @@ const TaskCard = ({
     if (completed) {
       setCompleted(!completed);
       dispatch(homepageActions.setTasks(newData));
+      localStorage.setItem("todoData", JSON.stringify(newData));
       dispatch(homepageActions.decreaseCompletedTask());
     } else {
       setCompleted(!completed);
       dispatch(homepageActions.setTasks(newData));
+      localStorage.setItem("todoData", JSON.stringify(newData));
       dispatch(homepageActions.increaseCompletedTask());
     }
   };
@@ -142,50 +151,57 @@ const TaskCard = ({
           </div>
         </div>
 
-        {isOpen && (
-          <div>
-            <p className={styles.des}>{descriptionProp}</p>
-            <p className={styles.date}>Date: {dateProp}</p>
-            <p className={styles.priority}>Priority: {priorityProp}</p>
-            <Button
-              className={styles.editBtn}
-              variant="contained"
-              onClick={() => editHandler(idProp)}
-            >
-              Edit
-            </Button>
-            <Button
-              className={styles.editBtn}
-              variant="contained"
-              onClick={() => deleteHandler(idProp)}
-            >
-              Delete
-            </Button>
-          </div>
-        )}
+        <div
+          className={`${styles.cardDetailsContainer} ${
+            isOpen ? styles.cardHide : ""
+          }`}
+        >
+          <p className={styles.des}>
+            {descriptionProp && descriptionProp.length > 500
+              ? `${descriptionProp.substring(0, 500)}...`
+              : descriptionProp}
+          </p>
+          <p className={styles.date}>Date: {dateProp}</p>
+          <p className={styles.priority}>Priority: {priorityProp}</p>
+          <Button
+            className={styles.editBtn}
+            variant="contained"
+            onClick={() => editHandler(idProp)}
+          >
+            Edit
+          </Button>
+          <Button
+            className={styles.editBtn}
+            variant="contained"
+            onClick={() => deleteHandler(idProp)}
+          >
+            Delete
+          </Button>
+        </div>
       </div>
 
-      {/* Edit Task Modal */}
-      <Modal
-        open={edit}
-        onClose={() => setEdit(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <PrimaryDialog open={edit} setOpen={setEdit}>
         <Box sx={style}>
           <p className={styles.addTitle}>Edit Task</p>
+          {textError && (
+            <p className={styles.errorTxt}>Please complete the form!</p>
+          )}
           <div className={styles.inputCon}>
             <input
               type="text"
               className={styles.input}
               value={editData.title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) =>
+                setEditData({ ...editData, title: e.target.value })
+              }
             />
             <input
               type="text"
               className={styles.input}
               value={editData.description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) =>
+                setEditData({ ...editData, description: e.target.value })
+              }
             />
           </div>
 
@@ -223,7 +239,7 @@ const TaskCard = ({
             Update
           </p>
         </Box>
-      </Modal>
+      </PrimaryDialog>
     </>
   );
 };

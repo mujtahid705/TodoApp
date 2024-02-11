@@ -13,9 +13,7 @@ const Header = () => {
     <>
       <div className={styles.container}>
         <div className={styles.sec1}>
-          <p className={styles.welcomeTxt}>
-            Hey <span className={styles.name}>{userName}</span>!
-          </p>
+          <p className={styles.welcomeTxt}>Hey!</p>
           <p className={styles.date}>{formattedDate}</p>
         </div>
         <div className={styles.sec2}>
