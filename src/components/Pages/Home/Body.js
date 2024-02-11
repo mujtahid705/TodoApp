@@ -87,6 +87,10 @@ const Body = () => {
         (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
       );
       setTaskDisplay(temp);
+    } else if (sort === "date") {
+      const temp = [...taskData];
+      temp.sort((a, b) => a.date.localeCompare(b.date));
+      setTaskDisplay(temp);
     }
   }, [sort, taskData]);
 
