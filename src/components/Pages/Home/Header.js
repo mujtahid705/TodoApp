@@ -13,11 +13,11 @@ const Header = () => {
     <>
       <div className={styles.container}>
         <div className={styles.sec1}>
-          <p className={styles.welcomeTxt}>Hey!</p>
+          <p className={styles.welcomeTxt}>Hello!</p>
           <p className={styles.date}>{formattedDate}</p>
         </div>
         <div className={styles.sec2}>
-          <Card name="Total" num={taskData.length} />
+          <Card name="Total" num={taskData ? taskData.length : 0} />
           <Card name="Completed" num={completed} />
         </div>
       </div>

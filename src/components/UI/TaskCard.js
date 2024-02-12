@@ -42,8 +42,6 @@ const TaskCard = ({
 
   const taskData = useSelector((state) => state.homepage.tasks);
 
-  console.log(statusProp, "Status");
-
   let priorityClass;
   switch (priorityProp) {
     case "High":

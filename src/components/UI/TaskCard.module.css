@@ -123,3 +123,15 @@
   overflow-y: hidden;
   opacity: 0;
 }
+
+@media screen and (max-width: 680px) {
+  .container {
+    width: 350px;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .container {
+    width: 300px;
+  }
+}

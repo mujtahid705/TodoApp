@@ -42,6 +42,14 @@ export const homepageSlice = createSlice({
         JSON.stringify(state.completedTask)
       );
     },
+
+    setID: (state, payload) => {
+      state.id = parseInt(payload.payload);
+    },
+
+    setCompletedTask: (state, payload) => {
+      state.completedTask = parseInt(payload.payload);
+    },
   },
 });
 

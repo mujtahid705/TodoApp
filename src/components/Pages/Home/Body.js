@@ -37,6 +37,7 @@ const Body = () => {
   const id = useSelector((state) => state.homepage.id);
 
   console.log(taskDisplay, "TASKDIS");
+  console.log(taskData, "TASKDat");
 
   const submitHandler = () => {
     if (title && description && priority && date) {
@@ -169,12 +170,14 @@ const Body = () => {
               type="text"
               placeholder="Title"
               className={styles.input}
+              value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
             <input
               type="text"
-              placeholder="description"
+              placeholder="Description"
               className={styles.input}
+              value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
