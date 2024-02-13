@@ -25,7 +25,6 @@ export default function PrimaryDialog({ open, setOpen, children }) {
             height: "500px",
             overflowY: "auto",
             width: "90%",
-            // maxWidth: "500px",
             backgroundColor: "transparent",
             boxShadow: "unset",
           },

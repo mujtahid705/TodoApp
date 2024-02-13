@@ -2,6 +2,7 @@ import styles from "./TaskCard.module.css";
 
 import { useState } from "react";
 import { style } from "../../modal-style";
+import PrimaryDialog from "./PrimaryDialog";
 
 // 3rd party packages
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -9,19 +10,11 @@ import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { homepageActions } from "../../redux/homepage-slice";
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Modal,
-  Select,
-} from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import dayjs from "dayjs";
-import PrimaryDialog from "./PrimaryDialog";
 
 const TaskCard = ({
   idProp,

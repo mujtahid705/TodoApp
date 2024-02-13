@@ -3,10 +3,10 @@ import TaskCard from "../../UI/TaskCard";
 import styles from "./Body.module.css";
 import { style } from "../../../modal-style";
 import { homepageActions } from "../../../redux/homepage-slice";
+import PrimaryDialog from "../../UI/PrimaryDialog";
 
 // 3rd Party Components
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import Modal from "@mui/material/Modal";
 import { Box } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -18,7 +18,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
-import PrimaryDialog from "../../UI/PrimaryDialog";
 
 const Body = () => {
   const dispatch = useDispatch();
@@ -29,18 +28,15 @@ const Body = () => {
   const [taskDisplay, setTaskDisplay] = useState([]);
 
   const [priority, setPriority] = useState(null);
-  const [title, setTitle] = useState(null);
-  const [description, setDescription] = useState(null);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [date, setDate] = useState(dayjs(new Date()));
 
   const taskData = useSelector((state) => state.homepage.tasks);
   const id = useSelector((state) => state.homepage.id);
 
-  console.log(taskDisplay, "TASKDIS");
-  console.log(taskData, "TASKDat");
-
   const submitHandler = () => {
-    if (title && description && priority && date) {
+    if (title !== "" && description !== "" && priority && date) {
       const data = {
         id,
         title,
@@ -51,15 +47,14 @@ const Body = () => {
       };
 
       const newData = [...taskData, data];
-      console.log(newData);
 
       dispatch(homepageActions.setTasks(newData));
       dispatch(homepageActions.increaseID());
       const newDataJSON = JSON.stringify(newData);
       localStorage.setItem("todoData", newDataJSON);
       setPriority(null);
-      setTitle(null);
-      setDescription(null);
+      setTitle("");
+      setDescription("");
       setDate(dayjs(new Date()));
       setTextError(false);
       setOpen(false);

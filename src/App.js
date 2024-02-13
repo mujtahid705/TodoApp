@@ -12,9 +12,6 @@ function App() {
     const data = localStorage.getItem("todoData");
     const id = localStorage.getItem("todoDataID");
     const completedTask = localStorage.getItem("todoDataCompletedTask");
-    console.log(data);
-    console.log(id);
-    console.log(completedTask);
     {
       data && dispatch(homepageActions.setTasks(JSON.parse(data)));
     }
